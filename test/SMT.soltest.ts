@@ -1,15 +1,15 @@
 import chai from 'chai';
-import { SMT256Instance } from './types/truffle-contracts';
+import { SMTExampleInstance } from '../src/types/truffle-contracts';
 import { soliditySha3 } from 'web3-utils';
 import fs from 'fs-extra';
 import { RollUpSMT } from '../src/rollUpSMT';
 
 const expect = chai.expect;
-const SMT256 = artifacts.require('SMT256');
+const SMTExample = artifacts.require('SMTExample');
 
 contract('SMT test', async accounts => {
   const location = 'testDB';
-  let smtSolLib: SMT256Instance;
+  let smtExample: SMTExampleInstance;
   let tree: RollUpSMT;
   before(async () => {
     // Initialize the test purpose database directory
@@ -20,7 +20,7 @@ contract('SMT test', async accounts => {
     tree = new RollUpSMT(256, location);
     let nullifiers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(val => soliditySha3(val));
     await tree.rollUp(nullifiers);
-    smtSolLib = await SMT256.deployed();
+    smtExample = await SMTExample.deployed();
   });
   after(() => {
     // Remove the test purpose database
@@ -30,7 +30,7 @@ contract('SMT test', async accounts => {
   });
   it('should return true for merkle proof', async () => {
     let merkleProof = await tree.merkleProof(soliditySha3(1));
-    let mp = await smtSolLib.merkleProof(
+    let mp = await smtExample.merkleProof(
       merkleProof.root.toString(),
       merkleProof.leaf.toString(),
       soliditySha3(merkleProof.val),
@@ -42,7 +42,7 @@ contract('SMT test', async accounts => {
     let nullifiers = sources.map(val => soliditySha3(val));
     let rollUpResult = await tree.rollUp(nullifiers);
     let proof = rollUpResult.proof;
-    await smtSolLib.rollUpProof(
+    await smtExample.rollUpProof(
       proof.root.toString(),
       proof.nextRoot.toString(),
       proof.leaves.map(nullifier => nullifier.toString()),
@@ -54,7 +54,7 @@ contract('SMT test', async accounts => {
     let nullifiers = sources.map(val => soliditySha3(val));
     let rollUpResult = await tree.rollUp(nullifiers);
     let proof = rollUpResult.proof;
-    await smtSolLib.rollUpProof(
+    await smtExample.rollUpProof(
       proof.root.toString(),
       proof.nextRoot.toString(),
       proof.leaves.map(nullifier => nullifier.toString()),
@@ -66,7 +66,7 @@ contract('SMT test', async accounts => {
     let nullifiers = sources.map(val => soliditySha3(val));
     let rollUpResult = await tree.rollUp(nullifiers);
     let proof = rollUpResult.proof;
-    await smtSolLib.rollUpProof(
+    await smtExample.rollUpProof(
       proof.root.toString(),
       proof.nextRoot.toString(),
       proof.leaves.map(nullifier => nullifier.toString()),

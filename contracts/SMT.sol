@@ -25,7 +25,7 @@ library SMT256 {
         bytes32 root,
         bytes32 leaf,
         bytes32[256] memory siblings
-    ) public pure returns(bool) {
+    ) internal pure returns(bool) {
         return merkleProof(root, leaf, EXIST, siblings);
     }
 
@@ -33,7 +33,7 @@ library SMT256 {
         bytes32 root,
         bytes32 leaf,
         bytes32[256] memory siblings
-    ) public pure returns(bool) {
+    ) internal pure returns(bool) {
         return merkleProof(root, leaf, NON_EXIST, siblings);
     }
 
@@ -42,7 +42,7 @@ library SMT256 {
         bytes32 leaf,
         bytes32 value,
         bytes32[256] memory siblings
-    ) public pure returns(bool) {
+    ) internal pure returns(bool) {
         require(calculateRoot(leaf, value, siblings) == root, "Invalid merkle proof");
         return true;
     }
@@ -51,7 +51,7 @@ library SMT256 {
         bytes32 leaf,
         bytes32 value,
         bytes32[256] memory siblings
-    ) public pure returns (bytes32) {
+    ) internal pure returns (bytes32) {
         bytes32 cursor = value;
         uint path = uint(leaf);
         for (uint16 i = 0; i < siblings.length; i++) {
@@ -71,7 +71,7 @@ library SMT256 {
         bytes32 root,
         bytes32 leaf,
         bytes32[256] memory siblings
-    ) public pure returns (bytes32 nextRoot) {
+    ) internal pure returns (bytes32 nextRoot) {
         // Prove that the array of sibling is valid and also the leaf does not exist in the tree
         require(nonInclusionProof(root, leaf, siblings), "Failed to build the previous root using jthe leaf and its sibling");
         // Calculate the new root when the leaf exists using its proven siblings
@@ -96,7 +96,7 @@ library SMT256 {
         bytes32 root,
         bytes32[] memory leaves,
         bytes32[256][] memory siblings
-    ) public pure returns (bytes32 nextRoot) {
+    ) internal pure returns (bytes32 nextRoot) {
         nextRoot = rollUp(RollUp(root, leaves, siblings));
     }
 
@@ -105,7 +105,7 @@ library SMT256 {
         bytes32 nextRoot,
         bytes32[] memory leaves,
         bytes32[256][] memory siblings
-    ) public pure returns (bool) {
+    ) internal pure returns (bool) {
         require(nextRoot == rollUp(RollUp(root, leaves, siblings)), "Failed to drive the next root from the proof");
     }
 }
