@@ -1,5 +1,4 @@
-pragma solidity >= 0.6.0;
-
+pragma solidity >=0.4.21 <0.7.0;
 
 /**
  * @author Wilson Beam <wilsonbeam@protonmail.com>
