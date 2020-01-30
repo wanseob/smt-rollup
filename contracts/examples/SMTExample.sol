@@ -1,6 +1,6 @@
 pragma solidity >= 0.6.0;
 
-import { SMT256 } from "../contracts/SMT.sol";
+import { SMT256 } from "../SMT.sol";
 
 contract SMTExample {
     using SMT256 for *;

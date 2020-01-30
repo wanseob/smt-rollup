@@ -8,6 +8,10 @@ export interface MigrationsContract extends Truffle.Contract<MigrationsInstance>
   'new'(meta?: Truffle.TransactionDetails): Promise<MigrationsInstance>;
 }
 
+export interface OptimisticSMTExampleContract extends Truffle.Contract<OptimisticSMTExampleInstance> {
+  'new'(meta?: Truffle.TransactionDetails): Promise<OptimisticSMTExampleInstance>;
+}
+
 export interface SMT256Contract extends Truffle.Contract<SMT256Instance> {
   'new'(meta?: Truffle.TransactionDetails): Promise<SMT256Instance>;
 }
@@ -34,6 +38,55 @@ export interface MigrationsInstance extends Truffle.ContractInstance {
     sendTransaction(new_address: string | BigNumber, txDetails?: Truffle.TransactionDetails): Promise<string>;
     estimateGas(new_address: string | BigNumber, txDetails?: Truffle.TransactionDetails): Promise<number>;
   };
+}
+
+export interface OptimisticSMTExampleInstance extends Truffle.ContractInstance {
+  propose: {
+    (
+      prev: string | BigNumber,
+      next: string | BigNumber,
+      mergedLeaves: string | BigNumber,
+      leaves: (string | BigNumber)[],
+      txDetails?: Truffle.TransactionDetails
+    ): Promise<Truffle.TransactionResponse>;
+    call(
+      prev: string | BigNumber,
+      next: string | BigNumber,
+      mergedLeaves: string | BigNumber,
+      leaves: (string | BigNumber)[],
+      txDetails?: Truffle.TransactionDetails
+    ): Promise<void>;
+    sendTransaction(
+      prev: string | BigNumber,
+      next: string | BigNumber,
+      mergedLeaves: string | BigNumber,
+      leaves: (string | BigNumber)[],
+      txDetails?: Truffle.TransactionDetails
+    ): Promise<string>;
+    estimateGas(
+      prev: string | BigNumber,
+      next: string | BigNumber,
+      mergedLeaves: string | BigNumber,
+      leaves: (string | BigNumber)[],
+      txDetails?: Truffle.TransactionDetails
+    ): Promise<number>;
+  };
+
+  initProof: {
+    (txDetails?: Truffle.TransactionDetails): Promise<Truffle.TransactionResponse>;
+    call(txDetails?: Truffle.TransactionDetails): Promise<void>;
+    sendTransaction(txDetails?: Truffle.TransactionDetails): Promise<string>;
+    estimateGas(txDetails?: Truffle.TransactionDetails): Promise<number>;
+  };
+
+  updateProof: {
+    (leaves: (string | BigNumber)[], siblings: (string | BigNumber)[][], txDetails?: Truffle.TransactionDetails): Promise<Truffle.TransactionResponse>;
+    call(leaves: (string | BigNumber)[], siblings: (string | BigNumber)[][], txDetails?: Truffle.TransactionDetails): Promise<void>;
+    sendTransaction(leaves: (string | BigNumber)[], siblings: (string | BigNumber)[][], txDetails?: Truffle.TransactionDetails): Promise<string>;
+    estimateGas(leaves: (string | BigNumber)[], siblings: (string | BigNumber)[][], txDetails?: Truffle.TransactionDetails): Promise<number>;
+  };
+
+  verifyProposal(txDetails?: Truffle.TransactionDetails): Promise<boolean>;
 }
 
 export interface SMT256Instance extends Truffle.ContractInstance {

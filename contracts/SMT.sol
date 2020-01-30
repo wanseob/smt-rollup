@@ -21,6 +21,12 @@ library SMT256 {
         bytes32[256][] siblings;
     }
 
+    struct OPRU {
+        bytes32 prev;
+        bytes32 next;
+        bytes32 mergedLeaves;
+    }
+
     function inclusionProof(
         bytes32 root,
         bytes32 leaf,
@@ -107,5 +113,41 @@ library SMT256 {
         bytes32[256][] memory siblings
     ) internal pure returns (bool) {
         require(nextRoot == rollUp(RollUp(root, leaves, siblings)), "Failed to drive the next root from the proof");
+    }
+
+    function newOPRU(bytes32 startingRoot) internal pure returns (OPRU memory opru) {
+        opru.prev = startingRoot;
+        opru.next = startingRoot;
+        opru.mergedLeaves = bytes32(0);
+    }
+
+    function update(
+        OPRU storage opru,
+        bytes32[] memory leaves,
+        bytes32[256][] memory siblings
+    ) internal {
+        opru.next = rollUp(opru.next, leaves, siblings);
+        opru.mergedLeaves = merge(opru.mergedLeaves, leaves);
+    }
+
+    function verify(
+        OPRU memory opru,
+        bytes32 prev,
+        bytes32 next,
+        bytes32 mergedLeaves
+    ) internal pure returns (bool) {
+        require(opru.prev == prev, "Started with different root");
+        require(opru.mergedLeaves == mergedLeaves, "Appended different leaves");
+        return opru.next == next;
+    }
+
+    function merge(
+        bytes32 base,
+        bytes32[] memory leaves
+    ) internal pure returns (bytes32 mergedLeaves) {
+        mergedLeaves = base;
+        for(uint i = 0; i < leaves.length; i++) {
+            mergedLeaves = keccak256(abi.encodePacked(mergedLeaves, leaves[i]));
+        }
     }
 }

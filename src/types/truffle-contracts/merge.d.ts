@@ -9,6 +9,7 @@ declare global {
   namespace Truffle {
     interface Artifacts {
       require(name: 'Migrations'): TruffleContracts.MigrationsContract;
+      require(name: 'OptimisticSMTExample'): TruffleContracts.OptimisticSMTExampleContract;
       require(name: 'SMT256'): TruffleContracts.SMT256Contract;
       require(name: 'SMTExample'): TruffleContracts.SMTExampleContract;
     }
