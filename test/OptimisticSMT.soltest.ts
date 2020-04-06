@@ -38,14 +38,13 @@ contract.only('SMT test', async accounts => {
   });
   describe('propose()', async () => {
     it('should be able to propose more than 100 items at once', async () => {
-      let mergedLeaves = '0';
-      rollUpResult.proof.leaves.map(toString).forEach(leaf => {
-        mergedLeaves = soliditySha3(mergedLeaves, leaf.toString());
-      });
+      const mergedLeaves = rollUpResult.proof.leaves.reduce((merged, leaf) => {
+        return soliditySha3(merged, leaf)
+      }, '0')
       await smtOPRU.propose(
         rollUpResult.proof.root.toString(),
         rollUpResult.proof.nextRoot.toString(),
-        mergedLeaves,
+        mergedLeaves.toString(),
         rollUpResult.proof.leaves.map(item => item.toString())
       );
     });
@@ -70,6 +69,11 @@ contract.only('SMT test', async accounts => {
           gas: 6700000
         });
       }
+      const list: any = []
+      proofs.forEach(element => {
+        list.push(...element.leaves)
+      });
+      console.log(list)
     });
   });
   describe('verify()', async () => {
