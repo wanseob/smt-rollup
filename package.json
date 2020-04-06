@@ -48,6 +48,7 @@
     "fs-extra": "^8.1.0",
     "husky": "^3.0.9",
     "lint-staged": "^9.4.2",
+    "level-rocksdb": "^4.0.0",
     "mocha": "^6.2.2",
     "prettier": "^1.19.1",
     "solc": "^0.5.13",
@@ -76,11 +77,5 @@
       "solium -d contracts/ --fix",
       "git add"
     ]
-  },
-  "dependencies": {
-    "level-rocksdb": "^4.0.0"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/@wilsonbeam"
   }
 }
